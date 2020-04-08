@@ -2,64 +2,48 @@ import React from 'react';
 import axios from "axios";
 import './App.css';
 
-//const userNames = ["joshuabhorrocks","mrsimpson3000","easpaas","Riley-Robinson","devjaymoe","Diddleslip","alanblee","CarlosAA10","gabeaster","janecyyu","jaybrennan" ]
+import UserCard from "./UserCard";
+import UserFollowers from "./UserFollowers";
 
 class App extends React.Component {
     constructor() {
       super();
       this.state = {
-        people: {}
+        person: {}, followers: []
       };
     }
   
     componentDidMount() {
-      axios.get(`https://api.github.com/users/devjaymoe`).then(response => {
+      axios.get(`https://api.github.com/users/joshuabhorrocks`).then(response => {
         console.log(response.data)
         this.setState({
-          person1: response.data,
+          person: response.data,
         });
-      });
-    // axios.get(`https://api.github.com/users/devjaymoe`).then(response => {
-    //     console.log(response.data)
-    //     this.setState({
-    //       person2: response.data,
-    //     });
-    //   });
-    // axios.get(`https://api.github.com/users/gabeaster`).then(response => {
-    //     console.log(response.data)
-    //     this.setState({
-    //       person3: response.data,
-    //     });
-    //   });
-    // axios.get(`https://api.github.com/users/jaybrennan`).then(response => {
-    //     console.log(response.data)
-    //     this.setState({
-    //       person4: response.data,
-    //     });
-    //   });
-}
+      })
+      .catch(error => {
+          console.log("Error:", error)
+      })
+      axios.get("https://api.github.com/users/joshuabhorrocks/followers").then(response => {
+          console.log(response.data)
+          this.setState({
+            followers: response.data
+          })
+      })
+      .catch(error => {
+          console.log("Follower Error:", error)
+      })
+    }
+
 
 render() {
     return (
         <div className="App">
-            <div className="Title">
-                <h1>Github People</h1>
-                <p>A few users of Github</p>
-            </div>
-                <div className="Card">
-                    <h2>Joshua Horrocks</h2>
-                    <p>Username: joshuabhorrocks</p>
-                    <p>Bio: Web Developer at Lambda School</p>
-                </div>
-                <div className="Card">
-                    <h2>Devin Moore</h2>
-                    <p>Username: devjaymoe</p>
-                    <p>Bio: null </p>
-                </div>
+            <h1>Github People</h1>
+            <UserCard person={this.state.person}/>
+            <UserFollowers followers={this.state.followers}/>
         </div>
     )
     }
 }
-
 
 export default App;
